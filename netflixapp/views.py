@@ -12,7 +12,6 @@ from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 
-
 class SignupView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -22,24 +21,25 @@ class SignupView(APIView):
         else:
             return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
         
-        
-from django.core.mail import send_mail
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 
-#@csrf_exempt  
+@csrf_exempt
 def send_email_confirmation(request):
     if request.method == 'POST':
         email = request.POST.get('email')
-        # Implementieren Sie hier die Logik zum Senden der Bestätigungsemail
-        send_mail(
-            'Bestätigen Sie Ihre E-Mail-Adresse',
-            'Klicken Sie auf den folgenden Link, um Ihre E-Mail zu bestätigen: [Bestätigungslink]',
-            'Ihre-Email@gmail.com',  # Absender-E-Mail
-            [email],  # Empfänger-E-Mail
-            fail_silently=False,
-        )
-        return JsonResponse({'message': 'Bestätigungsemail wurde gesendet'})
+        try:
+            # Versuchen, die E-Mail zu senden
+            send_mail(
+                'Bestätigen Sie Ihre E-Mail-Adresse',
+                'Klicken Sie auf den folgenden Link, um Ihre E-Mail zu bestätigen: [Bestätigungslink]',
+                'pfeiffer.herlina@gmx.net',  # Absender-E-Mail
+                [email],  # Empfänger-E-Mail
+                fail_silently=False,
+            )
+            # Wenn erfolgreich, eine Erfolgsmeldung zurückgeben
+            return JsonResponse({'message': 'Bestätigungsemail wurde gesendet'})
+        except Exception as e:
+            # Wenn ein Fehler auftritt, eine Fehlermeldung zurückgeben
+            return JsonResponse({'message': f'Fehler beim Senden der E-Mail: {str(e)}'}, status=500)
     return JsonResponse({'message': 'Ungültige Anfrage'}, status=400)
 
 
