@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from netflixapp.views import SignupView
+from netflixapp.views import SignupView, LoginView
 from netflixapp import views
 
 urlpatterns = [
@@ -25,5 +25,6 @@ urlpatterns = [
     # path('api/auth/', include('rest_framework.urls')),
 
     path('api/signup/',  SignupView.as_view(), name='signup'),
+    path('api/login/',  LoginView.as_view(), name='login'),
 
 ]

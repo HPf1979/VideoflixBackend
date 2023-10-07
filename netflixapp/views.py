@@ -8,29 +8,84 @@ from .serializers import UserSerializer
 from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
-from django.http import JsonResponse
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import redirect
+from django.contrib.auth import authenticate, login
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+import random
+import string
+from django.template.loader import render_to_string
 
 
 class SignupView(APIView):
+    def generate_unique_confirmation_code(self):
+        # Erzeugen Sie einen zufälligen Bestätigungscode oder Token
+        code_length = 16  # Legen Sie die Länge des Codes fest
+        characters = string.ascii_letters + string.digits
+        confirmation_code = ''.join(random.choice(characters)
+                                    for i in range(code_length))
+        return confirmation_code
+
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
+
+            # Setzen Sie den Benutzernamen gleich der E-Mail-Adresse
+            user.username = user.email
+            user.save()
+
+            self.send_confirmation_email(user)
+
+            # Geben Sie eine Erfolgsantwort zurück
             return Response({'success': True, 'user_id': user.id}, status=status.HTTP_201_CREATED)
+
+        # Für den Fall, dass die Validierung fehlschlägt
+        return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+    def send_confirmation_email(self, user):
+        # Generieren Sie einen eindeutigen Bestätigungscode oder Token
+        confirmation_code = self.generate_unique_confirmation_code()
+
+        # Speichern Sie den Bestätigungscode oder Token im Benutzerobjekt
+        user.confirmation_code = confirmation_code
+        user.save()
+
+        confirmation_link = f'http://localhost:4200/confirm?code={confirmation_code}'
+
+       # Senden Sie die Bestätigungsemail mit einem blauen Link
+        email_subject = 'Bestätigen Sie Ihre E-Mail-Adresse'
+        email_message = f'Klicken Sie auf den folgenden Link, um Ihre E-Mail für unsere App zu bestätigen: <a href="{confirmation_link}" style="color: blue;">{confirmation_link}</a>'
+
+        send_mail(
+            email_subject,
+            email_message,
+            'pfeiffer.herlina@gmail.com',  # Absender-E-Mail
+            [user.email],  # Empfänger-E-Mail (Benutzeremail)
+            fail_silently=False,
+            html_message=email_message,  # Dieser Parameter fügt HTML zur E-Mail hinzu
+        )
+
+
+class LoginView(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(
+            data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+
+        user = authenticate(request, email=request.data.get(
+            'email'), password=request.data.get('password'))
+
+        if user is not None:
+            # Wenn die Authentifizierung erfolgreich ist, generieren oder holen Sie das Token
+            token, created = Token.objects.get_or_create(user=user)
+
+            return Response({'token': token.key, 'email': user.email}, status=status.HTTP_200_OK)
         else:
-            return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-
-# Senden Sie eine Bestätigungsemail
-          #  send_mail(
-            #  'Bestätigen Sie Ihre E-Mail-Adresse',
-            # 'Klicken Sie auf den folgenden Link, um Ihre E-Mail zu bestätigen: [Bestätigungslink]',
-            # 'sender@example.com',  # Absender-E-Mail
-            # [user.email],  # Empfänger-E-Mail (Benutzeremail)
-            # fail_silently=False,
-            # )
-
+            return Response({'error': 'Login fehlgeschlagen'}, status=status.HTTP_401_UNAUTHORIZED)
 
 # class ProfileView(APIView):
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
@@ -38,14 +93,14 @@ class SignupView(APIView):
 
     # def get(self, request, format=None):
         # content = {
-           # 'user': str(request.user),  # `django.contrib.auth.User` instance.
-            # 'auth': str(request.auth),  # None
+        # 'user': str(request.user),  # `django.contrib.auth.User` instance.
+        # 'auth': str(request.auth),  # None
         # }
         # return Response(content)
 
 # class IndexView(APIView):
        # def get(self, request, format=None):
        # content = {
-          #  'wsmg': 'Welcome to Full Stack Development'
+        #  'wsmg': 'Welcome to Full Stack Development'
         # }
         # return Response(content)
