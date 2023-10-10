@@ -18,6 +18,11 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 import random
 import string
 from django.template.loader import render_to_string
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+from rest_framework import viewsets
+from .models import Video
+from .serializers import VideoSerializer
 
 
 class SignupView(APIView):
@@ -72,35 +77,41 @@ class SignupView(APIView):
 
 class LoginView(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(
-            data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
 
-        user = authenticate(request, email=request.data.get(
-            'email'), password=request.data.get('password'))
+        email = request.data.get('email')
+        password = request.data.get('password')
+
+        user = authenticate(request, username=email, password=password)
 
         if user is not None:
-            # Wenn die Authentifizierung erfolgreich ist, generieren oder holen Sie das Token
+            # Wenn die Authentifizierung erfolgreich ist, wird Token generiert oder geholt
             token, created = Token.objects.get_or_create(user=user)
 
             return Response({'token': token.key, 'email': user.email}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Login fehlgeschlagen'}, status=status.HTTP_401_UNAUTHORIZED)
 
+
+class VideoViewSet(viewsets.ModelViewSet):
+    queryset = Video.objects.all()
+    serializer_class = VideoSerializer
+
+    # basename = 'videos'
+
 # class ProfileView(APIView):
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
     # permission_classes = [IsAuthenticated]
 
     # def get(self, request, format=None):
-        # content = {
-        # 'user': str(request.user),  # `django.contrib.auth.User` instance.
-        # 'auth': str(request.auth),  # None
-        # }
-        # return Response(content)
+    # content = {
+    # 'user': str(request.user),  # `django.contrib.auth.User` instance.
+    # 'auth': str(request.auth),  # None
+    # }
+    # return Response(content)
 
 # class IndexView(APIView):
-       # def get(self, request, format=None):
-       # content = {
-        #  'wsmg': 'Welcome to Full Stack Development'
-        # }
-        # return Response(content)
+    # def get(self, request, format=None):
+    # content = {
+    #  'wsmg': 'Welcome to Full Stack Development'
+    # }
+    # return Response(content)

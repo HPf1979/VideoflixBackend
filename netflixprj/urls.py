@@ -18,6 +18,14 @@ from django.contrib import admin
 from django.urls import path, include
 from netflixapp.views import SignupView, LoginView
 from netflixapp import views
+from django.conf import settings
+from django.conf.urls.static import static
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'videos', views.VideoViewSet)
+
+# router.urls[0] = path('api/', include(router.urls))
 
 urlpatterns = [
     # path('netflixapp/', include('netflixapp.urls')),
@@ -26,5 +34,6 @@ urlpatterns = [
 
     path('api/signup/',  SignupView.as_view(), name='signup'),
     path('api/login/',  LoginView.as_view(), name='login'),
+    path('api/video/', include(router.urls)),
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

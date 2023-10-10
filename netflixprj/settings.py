@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,9 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'netflixapp.apps.NetflixappConfig',
     'rest_framework',
     'corsheaders',
+    'netflixprj',
+    'netflixapp',
     'rest_framework.authtoken',
 ]
 
@@ -60,11 +62,14 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'pfeiffer.herlina@gmail.com'
-EMAIL_HOST_PASSWORD = 'gffl qpsf lunm bkie'
+EMAIL_HOST_PASSWORD = 'bonp xgcd vfqw qldh'
 EMAIL_USE_TLS = True
 
 
 ROOT_URLCONF = 'netflixprj.urls'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 TEMPLATES = [
     {
@@ -91,10 +96,9 @@ WSGI_APPLICATION = 'netflixprj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

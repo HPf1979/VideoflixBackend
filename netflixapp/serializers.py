@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from .models import Video
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -17,3 +18,9 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(
             username=username, email=email, password=password, **validated_data)
         return user
+
+
+class VideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = '__all__'
