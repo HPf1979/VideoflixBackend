@@ -22,6 +22,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework import routers
 
+from netflixprj import settings
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
 router = routers.DefaultRouter()
 router.register(r'videos', views.VideoViewSet)
 
@@ -36,4 +39,4 @@ urlpatterns = [
     path('api/login/',  LoginView.as_view(), name='login'),
     path('api/video/', include(router.urls)),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + staticfiles_urlpatterns()
