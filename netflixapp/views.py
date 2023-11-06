@@ -27,7 +27,7 @@ from .serializers import VideoSerializer
 
 class SignupView(APIView):
     def generate_unique_confirmation_code(self):
-        # Erzeugen Sie einen zufälligen Bestätigungscode oder Token
+        # ich erzeuge einen zufälligen Bestätigungscode oder Token
         code_length = 16  # Legen Sie die Länge des Codes fest
         characters = string.ascii_letters + string.digits
         confirmation_code = ''.join(random.choice(characters)
@@ -39,29 +39,29 @@ class SignupView(APIView):
         if serializer.is_valid():
             user = serializer.save()
 
-            # Setzen Sie den Benutzernamen gleich der E-Mail-Adresse
+            # ich setze den Benutzernamen gleich der E-Mail-Adresse
             user.username = user.email
             user.save()
 
             self.send_confirmation_email(user)
 
-            # Geben Sie eine Erfolgsantwort zurück
+            # ich gebe eine Erfolgsantwort zurück
             return Response({'success': True, 'user_id': user.id}, status=status.HTTP_201_CREATED)
 
         # Für den Fall, dass die Validierung fehlschlägt
         return Response({'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     def send_confirmation_email(self, user):
-        # Generieren Sie einen eindeutigen Bestätigungscode oder Token
+        # ich generiere einen eindeutigen Bestätigungscode oder Token
         confirmation_code = self.generate_unique_confirmation_code()
 
-        # Speichern Sie den Bestätigungscode oder Token im Benutzerobjekt
+        # ich speichere den Bestätigungscode oder Token im Benutzerobjekt
         user.confirmation_code = confirmation_code
         user.save()
 
         confirmation_link = f'http://localhost:4200/confirm?code={confirmation_code}'
 
-       # Senden Sie die Bestätigungsemail mit einem blauen Link
+       # ich sende die Bestätigungsemail mit einem blauen Link
         email_subject = 'Bestätigen Sie Ihre E-Mail-Adresse'
         email_message = f'Klicken Sie auf den folgenden Link, um Ihre E-Mail für unsere App zu bestätigen: <a href="{confirmation_link}" style="color: blue;">{confirmation_link}</a>'
 
