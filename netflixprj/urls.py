@@ -43,7 +43,4 @@ urlpatterns = [
     path('api/video/', include(router.urls)),
 
 ] + staticfiles_urlpatterns()
-<<<<<<< HEAD
 # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-=======
->>>>>>> 6936e94516b4331cbb4b3f41c032209eec851cbe
