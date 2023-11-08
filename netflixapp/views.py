@@ -59,11 +59,12 @@ class SignupView(APIView):
         user.confirmation_code = confirmation_code
         user.save()
 
-        confirmation_link = f'http://herlina-pfeiffer.developerakademie.net/videoflix-frontend/confirm?code={confirmation_code}'
-
+        # confirmation_link = f'http://herlina-pfeiffer.developerakademie.net/videoflix-frontend/confirm?code={confirmation_code}'
+        confirmation_link = f'http://herlina-pfeiffer.developerakademie.net/videoflix-frontend/login'
        # ich sende die Bestätigungsemail mit einem blauen Link
         email_subject = 'Bestätigen Sie Ihre E-Mail-Adresse'
-        email_message = f'Klicken Sie auf den folgenden Link, um Ihre E-Mail für unsere App zu bestätigen: <a href="{confirmation_link}" style="color: blue;">{confirmation_link}</a>'
+        # email_message = f'Klicken Sie auf den folgenden Link, um Ihre E-Mail für unsere App zu bestätigen: <a href="{confirmation_link}" style="color: blue;">{confirmation_link}</a>'
+        email_message = f'Sie wurden erfolgreich registriert. Klicken Sie <a href="{confirmation_link}" style="color: blue;">hier</a>, um sich anzumelden.'
 
         send_mail(
             email_subject,
