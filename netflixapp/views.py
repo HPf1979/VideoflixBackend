@@ -59,7 +59,7 @@ class SignupView(APIView):
         user.confirmation_code = confirmation_code
         user.save()
 
-        confirmation_link = f'http://localhost:4200/confirm?code={confirmation_code}'
+        confirmation_link = f'http://herlina-pfeiffer.developerakademie.org/confirm?code={confirmation_code}'
 
        # ich sende die Bestätigungsemail mit einem blauen Link
         email_subject = 'Bestätigen Sie Ihre E-Mail-Adresse'
