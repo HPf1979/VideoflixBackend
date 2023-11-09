@@ -67,7 +67,8 @@ EMAIL_USE_TLS = True
 
 ROOT_URLCONF = 'netflixprj.urls'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 TEMPLATES = [

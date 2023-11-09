@@ -42,5 +42,7 @@ urlpatterns = [
     path('api/login/',  LoginView.as_view(), name='login'),
     path('api/video/', include(router.urls)),
 
-] + staticfiles_urlpatterns()
+]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# + staticfiles_urlpatterns()
 # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
