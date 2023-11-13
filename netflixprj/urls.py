@@ -24,25 +24,15 @@ from rest_framework import routers
 from netflixprj import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
-
-from netflixprj import settings
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-
 router = routers.DefaultRouter()
 router.register(r'videos', views.VideoViewSet)
 
-# router.urls[0] = path('api/', include(router.urls))
-
 urlpatterns = [
-    # path('netflixapp/', include('netflixapp.urls')),
     path('admin/', admin.site.urls),
-    # path('api/auth/', include('rest_framework.urls')),
-
-    path('api/signup/',  SignupView.as_view(), name='signup'),
-    path('api/login/',  LoginView.as_view(), name='login'),
+    path('api/signup/', SignupView.as_view(), name='signup'),
+    path('api/login/', LoginView.as_view(), name='login'),
     path('api/video/', include(router.urls)),
-
 ]
+
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-# + staticfiles_urlpatterns()
-# + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

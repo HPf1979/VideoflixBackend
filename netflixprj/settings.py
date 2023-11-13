@@ -56,19 +56,36 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
 ]
+
+#MIDDLEWARE = [
+ #   'django.middleware.security.SecurityMiddleware',
+  #  'whitenoise.middleware.WhiteNoiseMiddleware',
+   # 'django.contrib.sessions.middleware.SessionMiddleware',
+   # 'corsheaders.middleware.CorsMiddleware',
+   # 'django.middleware.common.CommonMiddleware',
+   # 'django.middleware.csrf.CsrfViewMiddleware',
+   # 'django.contrib.auth.middleware.AuthenticationMiddleware',
+   # 'django.contrib.messages.middleware.MessageMiddleware',
+   # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+#]
+
+#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL SETTINGS
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'pfeiffer.herlina@gmail.com'
 EMAIL_HOST_PASSWORD = 'bonp xgcd vfqw qldh'
+
 EMAIL_USE_TLS = True
 
 
 ROOT_URLCONF = 'netflixprj.urls'
 
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_ROOT = BASE_DIR / 'media'
+#MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = '/root/media/'
 MEDIA_URL = '/media/'
 
 TEMPLATES = [
