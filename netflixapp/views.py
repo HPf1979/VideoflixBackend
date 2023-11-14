@@ -20,9 +20,12 @@ import string
 from django.template.loader import render_to_string
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings
+from django.views.decorators.cache import cache_page
 from rest_framework import viewsets
 from .models import Video
 from .serializers import VideoSerializer
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
 
 
 class SignupView(APIView):
@@ -93,26 +96,14 @@ class LoginView(ObtainAuthToken):
             return Response({'error': 'Login fehlgeschlagen'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
+CACHE_TTL=getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
+
 class VideoViewSet(viewsets.ModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
 
-    # basename = 'videos'
+    @cache_page(CACHE_TTL)
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
-# class ProfileView(APIView):
-    # authentication_classes = [SessionAuthentication, BasicAuthentication]
-    # permission_classes = [IsAuthenticated]
-
-    # def get(self, request, format=None):
-    # content = {
-    # 'user': str(request.user),  # `django.contrib.auth.User` instance.
-    # 'auth': str(request.auth),  # None
-    # }
-    # return Response(content)
-
-# class IndexView(APIView):
-    # def get(self, request, format=None):
-    # content = {
-    #  'wsmg': 'Welcome to Full Stack Development'
-    # }
-    # return Response(content)

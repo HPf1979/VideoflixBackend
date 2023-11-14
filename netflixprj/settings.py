@@ -26,8 +26,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1',
                  'herlina-pfeiffer.developerakademie.org', '35.216.177.61']
-
-
+CACHE_TTL = 60 * 15
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,12 +48,12 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 CACHES = {
@@ -100,30 +99,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'netflixprj.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-# DATABASES = {
-#   'default': {
-#      'ENGINE': 'django.db.backends.sqlite3',
-#     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-# }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'videoflixdatabase',   # Der Name deiner PostgreSQL-Datenbank
+        'NAME': 'videoflixdatabase',   # Der Name PostgreSQL-Datenbank
         'USER': 'herlina',             # Dein PostgreSQL-Benutzername
         'PASSWORD': 'newdatabase',  # Dein PostgreSQL-Passwort
-        'HOST': 'localhost',           # Oder die Adresse deiner PostgreSQL-Datenbank
+        'HOST': 'localhost',           # Oder die Adresse PostgreSQL-Datenbank
         'PORT': '5432',                # Standard-Port für PostgreSQL
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
