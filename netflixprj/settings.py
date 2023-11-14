@@ -57,22 +57,18 @@ MIDDLEWARE = [
 
 ]
 
-#MIDDLEWARE = [
- #   'django.middleware.security.SecurityMiddleware',
-  #  'whitenoise.middleware.WhiteNoiseMiddleware',
-   # 'django.contrib.sessions.middleware.SessionMiddleware',
-   # 'corsheaders.middleware.CorsMiddleware',
-   # 'django.middleware.common.CommonMiddleware',
-   # 'django.middleware.csrf.CsrfViewMiddleware',
-   # 'django.contrib.auth.middleware.AuthenticationMiddleware',
-   # 'django.contrib.messages.middleware.MessageMiddleware',
-   # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-#]
-
-#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
+        "KEY_PREFIX": "videoflix"
+    }
+}
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL SETTINGS
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'pfeiffer.herlina@gmail.com'
@@ -83,8 +79,6 @@ EMAIL_USE_TLS = True
 
 ROOT_URLCONF = 'netflixprj.urls'
 
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-#MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_ROOT = '/root/media/'
 MEDIA_URL = '/media/'
 
@@ -110,12 +104,12 @@ WSGI_APPLICATION = 'netflixprj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-#DATABASES = {
- #   'default': {
-  #      'ENGINE': 'django.db.backends.sqlite3',
-   #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-   # }
-#}
+# DATABASES = {
+#   'default': {
+#      'ENGINE': 'django.db.backends.sqlite3',
+#     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+# }
+# }
 
 DATABASES = {
     'default': {
