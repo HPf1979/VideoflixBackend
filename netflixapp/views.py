@@ -26,7 +26,7 @@ from rest_framework import viewsets
 from .models import Video
 from .serializers import VideoSerializer
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
-
+from django.utils.decorators import method_decorator
 
 class SignupView(APIView):
     def generate_unique_confirmation_code(self):
@@ -103,7 +103,7 @@ class VideoViewSet(viewsets.ModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
 
-    @cache_page(CACHE_TTL)
+    @method_decorator(cache_page(settings.CACHE_TTL))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
